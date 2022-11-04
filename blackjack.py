@@ -27,8 +27,8 @@ class Deck:  # Deck class that automatically generates a deck by creating a list
             for rank in ranks:
                 self.deck.append(Card(suit, rank))
 
-    def __str__(
-            self):  # Allows user to see the composition of the deck by calling the print function of the Deck object
+    def __str__(self):  # Allows user to see the composition of the deck by calling the print function of the Deck
+        # object
         deck_composition = ""
         for card in self.deck:
             deck_composition += '\n' + card.__str__()
@@ -62,7 +62,7 @@ class Hand:  # Allows user to see what cards they possess
             self.aces -= 1
 
 
-class Chips: # Chips class that keeps track of players starting chips, bets and winnings.
+class Chips:  # Chips class that keeps track of players starting chips, bets and winnings.
 
     def __init__(self, total=100):
         self.total = total
@@ -73,3 +73,100 @@ class Chips: # Chips class that keeps track of players starting chips, bets and 
 
     def lose_bet(self):
         self.total -= self.bet
+
+
+"""
+GAME RELATED FUNCTIONS
+"""
+
+
+def take_bet(chips):  # Function for taking bets
+    # The function also checks whether a players bet can be covered by their available chips.
+    while True:
+        try:
+            chips.bet = int(input('How many chips would you like to bet? '))
+        except ValueError:
+            print('Sorry! a bet must be an integer')
+        else:
+            if chips.bet > chips.total:
+                print('Sorry, you do not have enough chips! You have: {}'.format(chips.total))
+            else:
+                break
+
+
+def hit(deck, hand):  # Function that enables player to take hits
+    single_card = deck.deal()
+    hand.add_card(single_card)
+    hand.adjust_for_aces()
+
+
+def hit_or_stand(deck, hand):
+    global playing
+
+    while True:
+        x = input('Hit or Stand? Enter h or s: ')
+
+        if x[0].lower() == 'h':
+            hit(deck, hand)
+
+        elif x[0].lower == 's':
+            print("Player stands. Dealers turn")
+            playing = False
+
+        else:
+            print("Sorry, I did not understand that, Please enter eiher h or s")
+            continue
+        break
+
+
+def show_some(player, dealer):  # Function that shows only one of the dealers cards and all the players cards
+
+    print("\n Dealer's hand: ")
+    print("First card hidden!")
+    print(dealer.cards[1])
+
+    print("\n Player's hand: ")
+    for card in player.cards:
+        print(card)
+
+
+def show_all(player, dealer):  # Function that displays all dealer and player cards, and their values
+
+    print("\n Dealer's hand: ")
+    for card in dealer.cards:
+        print(card)
+    print(f"Value of dealer is {dealer.value}")
+
+    print("\n Player's hand: ")
+    for card in player.cards:
+        print(card)
+    print(f"Value of player is {player.value}")
+
+
+"""
+END GAME SCENARIOS
+"""
+
+
+def player_busts(player, dealer, chips):
+    print("BUST PLAYER!")
+    chips.lose_bet()
+
+
+def player_wins(player, dealer, chips):
+    print("PLAYER WINS!")
+    chips.win_bet()
+
+
+def dealer_busts(player, dealer, chips):
+    print("PLAYER WINS! DEALER BUSTED")
+    chips.win_bet()
+
+
+def dealer_wins(player, dealer, chips):
+    print("DEALER WINS!")
+    chips.lose_bet()
+
+
+def push(dealer, player):
+    print("Dealer and player tie! PUSH!")
