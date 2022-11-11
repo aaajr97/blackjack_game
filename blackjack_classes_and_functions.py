@@ -9,6 +9,9 @@ values = {'Two': 2, 'Three': 3, 'Four': 4, 'Five': 5, 'Six': 6, 'Seven': 7, 'Eig
           'Jack': 10, 'Queen': 10, 'King': 10, 'Ace': 11}
 
 
+# global playing
+
+
 class Card:  # Card class
 
     def __init__(self, suit, rank):
@@ -100,21 +103,23 @@ def hit(deck, hand):  # Function that enables player to take hits
     hand.adjust_for_aces()
 
 
+playing = True
+
+
 def hit_or_stand(deck, hand):
     global playing
-
-    while True:
+    while playing:
         x = input('Hit or Stand? Enter h or s: ')
 
         if x[0].lower() == 'h':
             hit(deck, hand)
 
-        elif x[0].lower == 's':
+        elif x[0].lower() == 's':
             print("Player stands. Dealers turn")
             playing = False
 
         else:
-            print("Sorry, I did not understand that, Please enter eiher h or s")
+            print("Sorry, I did not understand that, Please enter either h or s")
             continue
         break
 
